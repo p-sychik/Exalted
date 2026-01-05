@@ -31,28 +31,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.exalted.exaltedapp.data.ToDoItem
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import com.exalted.exaltedapp.service.makeToDoItem
 import kotlinx.coroutines.delay
-import androidx.compose.material3.lightColorScheme
-
-private val LightColors = lightColorScheme(
-    primary = Color(0xFFA8763E),
-    onPrimary = Color(0xFF2B2118),
-    secondary = Color(0xFFa67c59),
-    onSecondary = Color.White,
-    background = Color(0xFF380606),
-    onBackground = Color.Black,
-    surface = Color(0xFFE9DDAF),
-    onSurface = Color(0xFF2B2118),
-)
+import com.exalted.exaltedapp.ui.LightColors
+import ui.theme.exaltedTypography
 
 @Composable
 @Preview
 fun App() {
     MaterialTheme (
-        colorScheme = LightColors
+        colorScheme = LightColors,
+        typography = exaltedTypography()
     ) {
         var showContent by remember { mutableStateOf(false) }
         var toDoList by remember { mutableStateOf(listOf<ToDoItem>()) }
@@ -65,8 +57,11 @@ fun App() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Create a task...")
+            Button(
+                onClick = { showContent = !showContent },
+
+            ) {
+                Text("Create a task...", fontSize = 24.sp)
             }
             val entryState = rememberTextFieldState()
             val descriptionState = rememberTextFieldState()
@@ -125,22 +120,22 @@ fun App() {
                                         .fillMaxWidth()
                                         .padding(vertical = 4.dp)
                                 ) {
-                                    Text(priority.ifEmpty { "Priority" })
+                                    Text(priority.ifEmpty { "Priority" }, fontSize = 24.sp)
                                 }
                                 DropdownMenu(
                                     expanded = expandedPriority,
                                     onDismissRequest = { expandedPriority = false }
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text("Low") },
+                                        text = { Text("Low", fontSize = 24.sp) },
                                         onClick = {priority = "Low"; expandedPriority = false}
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("Medium") },
+                                        text = { Text("Medium", fontSize = 24.sp) },
                                         onClick = {priority = "Medium"; expandedPriority = false}
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("High") },
+                                        text = { Text("High", fontSize = 24.sp) },
                                         onClick = {priority = "High"; expandedPriority = false}
                                     )
                                 }
@@ -155,22 +150,22 @@ fun App() {
                                         .fillMaxWidth()
                                         .padding(vertical = 4.dp)
                                 ) {
-                                    Text(difficulty.ifEmpty { "Difficulty" })
+                                    Text(difficulty.ifEmpty { "Difficulty" }, fontSize = 24.sp)
                                 }
                                 DropdownMenu(
                                     expanded = expandedDifficulty,
                                     onDismissRequest = { expandedDifficulty = false }
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text("Easy") },
+                                        text = { Text("Easy", fontSize = 24.sp) },
                                         onClick = {difficulty = "Easy"; expandedDifficulty = false}
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("Moderate") },
+                                        text = { Text("Moderate", fontSize = 24.sp) },
                                         onClick = {difficulty = "Moderate"; expandedDifficulty = false}
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("Hard") },
+                                        text = { Text("Hard", fontSize = 24.sp) },
                                         onClick = {difficulty = "Hard"; expandedDifficulty = false}
                                     )
                                 }
@@ -197,7 +192,7 @@ fun App() {
                                         .fillMaxWidth()
                                         .padding(vertical = 8.dp)
                                 ) {
-                                    Text("Create Todo Item")
+                                    Text("Inscribe", fontSize = 24.sp)
                                 }
                             }
                         }
@@ -284,20 +279,20 @@ fun ToDoRow(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(text = item.entry, style = MaterialTheme.typography.titleMedium)
+                        Text(text = item.entry, style = MaterialTheme.typography.titleMedium, fontSize = 30.sp)
                         if (item.description.isNotEmpty()) {
                             Text(text = item.description)
                         }
                         Text(
                             text = "Priority: ${item.priority} | Difficulty: ${item.difficulty}",
-                            style = MaterialTheme.typography.labelSmall
+
                         )
                     }
                     Button(
                         onClick = { onToggleCompleted(item) },
                         modifier = Modifier.padding(start = 8.dp)
                     ) {
-                        Text(if (item.completed) "Undo" else "Complete")
+                        Text(if (item.completed) "Undo" else "Complete", fontSize = 24.sp)
                     }
                 }
             }
