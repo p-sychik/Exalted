@@ -8,8 +8,7 @@ The app will:
         - On completion, the user optionally has the ability to add a message to their timeline
 - Intend to be used over a prolonged period of time (typically years)
 - Have a timeline showcasing all the achievements of the user, displaying the biggest achievement depending on timeline shown
-- Have a Log-In, with hash + salt for password, and a guest option
-- Exports of data available, and importing of data
+- Exports of data available
 
 Types of skills that will have experience to develop on:
 **Alchemy:** A skill that focuses on developing your cooking skills.
