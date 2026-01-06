@@ -59,7 +59,7 @@ fun TodoList(){
             onClick = { showContent = !showContent },
 
             ) {
-            Text("Create a task...", fontSize = 24.sp)
+            Text("Tasks", fontSize = 24.sp)
         }
         val entryState = rememberTextFieldState()
         val descriptionState = rememberTextFieldState()
@@ -75,6 +75,8 @@ fun TodoList(){
                 var expandedPriority by remember { mutableStateOf(false) }
                 var expandedDifficulty by remember { mutableStateOf(false) }
                 var expandedSkill by remember { mutableStateOf(false) }
+
+                val dropdownTextStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 16.sp)
 
                 val canCreateTodo by remember {
                     derivedStateOf {
@@ -129,20 +131,17 @@ fun TodoList(){
                             }
                             DropdownMenu(
                                 expanded = expandedPriority,
-                                onDismissRequest = { expandedPriority = false }
+                                onDismissRequest = { expandedPriority = false },
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text("Low", fontSize = 24.sp) },
-                                    onClick = {priority = Priority.LOW; expandedPriority = false}
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Medium", fontSize = 24.sp) },
-                                    onClick = {priority = Priority.MEDIUM; expandedPriority = false}
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("High", fontSize = 24.sp) },
-                                    onClick = {priority = Priority.HIGH; expandedPriority = false}
-                                )
+                                Priority.entries.forEach { priorityType ->
+                                    DropdownMenuItem(
+                                        text = { Text(priorityType.displayName, style = dropdownTextStyle) },
+                                        onClick = {
+                                            priority = priorityType
+                                            expandedPriority = false
+                                        }
+                                    )
+                                }
                             }
                         }
                         Box(
@@ -162,20 +161,17 @@ fun TodoList(){
                             }
                             DropdownMenu(
                                 expanded = expandedDifficulty,
-                                onDismissRequest = { expandedDifficulty = false }
+                                onDismissRequest = { expandedDifficulty = false },
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text("Easy", fontSize = 24.sp) },
-                                    onClick = {difficulty = Difficulty.EASY; expandedDifficulty = false}
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Moderate", fontSize = 24.sp) },
-                                    onClick = {difficulty = Difficulty.MODERATE; expandedDifficulty = false}
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Hard", fontSize = 24.sp) },
-                                    onClick = {difficulty = Difficulty.HARD; expandedDifficulty = false}
-                                )
+                                Difficulty.entries.forEach { difficultyType ->
+                                    DropdownMenuItem(
+                                        text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
+                                        onClick = {
+                                            difficulty = difficultyType
+                                            expandedDifficulty = false
+                                        }
+                                    )
+                                }
                             }
                         }
                         Box(
@@ -195,28 +191,17 @@ fun TodoList(){
                             }
                             DropdownMenu(
                                 expanded = expandedSkill,
-                                onDismissRequest = { expandedSkill = false }
+                                onDismissRequest = { expandedSkill = false },
                             ) {
-                                DropdownMenuItem(
-                                    text = { Text("Alchemy", fontSize = 24.sp) },
-                                    onClick = {skill = SkillType.ALCHEMY; expandedSkill = false}
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Craftsmanship", fontSize = 24.sp) },
-                                    onClick = {skill = SkillType.CRAFTSMANSHIP; expandedSkill = false}
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Scholarship", fontSize = 24.sp) },
-                                    onClick = {skill = SkillType.SCHOLARSHIP; expandedSkill = false}
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Vigor", fontSize = 24.sp) },
-                                    onClick = {skill = SkillType.VIGOR; expandedSkill = false}
-                                )
-                                DropdownMenuItem(
-                                    text = { Text("Eloquence", fontSize = 24.sp) },
-                                    onClick = {skill = SkillType.ELOQUENCE; expandedSkill = false}
-                                )
+                                SkillType.entries.forEach { skillType ->
+                                    DropdownMenuItem(
+                                        text = { Text(skillType.displayName, style = dropdownTextStyle) },
+                                        onClick = {
+                                            skill = skillType
+                                            expandedSkill = false
+                                        }
+                                    )
+                                }
                             }
                         }
                         Box(
@@ -276,7 +261,10 @@ fun TodoList(){
                                     item = item,
                                     onToggleCompleted = { toggled ->
                                         toDoList = toDoList.map {
-                                            if (it.id == toggled.id) it.copy(completed = !it.completed) else it
+                                            if (it.id == toggled.id)
+                                                it.copy(completed = !it.completed)
+                                            else
+                                                it
                                         }
                                     },
                                     onAutoRemove = { removed ->
@@ -285,11 +273,10 @@ fun TodoList(){
                                 )
                                 HorizontalDivider(
                                     color = Color.Gray.copy(alpha = 0.5f),
-                                    thickness = 1.dp,
+                                    thickness = 2.dp,
                                     modifier = Modifier.padding(vertical = 4.dp)
                                 )
                             }
-
                         }
                     }
                 }
@@ -297,3 +284,4 @@ fun TodoList(){
         }
     }
 }
+

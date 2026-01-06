@@ -14,3 +14,4 @@ fun makeToDoItem(entry: String, description: String, priority: Priority, difficu
 
     return ToDoItem(id, entry, description, priority, difficulty, skill, completed)
 }
+
