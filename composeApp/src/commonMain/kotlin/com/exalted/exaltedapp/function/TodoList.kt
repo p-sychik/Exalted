@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.exalted.exaltedapp.data.ToDoItem
+import com.exalted.exaltedapp.data.progression.SkillType
 import kotlin.collections.plus
 import kotlin.text.ifEmpty
 
@@ -69,13 +70,17 @@ fun TodoList(){
             ) {
                 var priority by remember { mutableStateOf("") }
                 var difficulty by remember { mutableStateOf("") }
+                var skill by remember { mutableStateOf<SkillType?>(null) }
                 var expandedPriority by remember { mutableStateOf(false) }
                 var expandedDifficulty by remember { mutableStateOf(false) }
+                var expandedSkill by remember { mutableStateOf(false) }
+
                 val canCreateTodo by remember {
                     derivedStateOf {
                         entryState.text.isNotBlank() &&
                                 priority.isNotBlank() &&
-                                difficulty.isNotBlank()
+                                difficulty.isNotBlank() &&
+                                skill != null
                     }
                 }
                 Card(
@@ -171,17 +176,60 @@ fun TodoList(){
                                 .padding(16.dp)
                         ) {
                             Button(
+                                onClick = { expandedSkill = !expandedSkill },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = skill?.displayName ?: "Skill",
+                                    fontSize = 24.sp
+                                )
+                            }
+                            DropdownMenu(
+                                expanded = expandedSkill,
+                                onDismissRequest = { expandedSkill = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Alchemy", fontSize = 24.sp) },
+                                    onClick = {skill = SkillType.ALCHEMY; expandedSkill = false}
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Craftsmanship", fontSize = 24.sp) },
+                                    onClick = {skill = SkillType.CRAFTSMANSHIP; expandedSkill = false}
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Scholarship", fontSize = 24.sp) },
+                                    onClick = {skill = SkillType.SCHOLARSHIP; expandedSkill = false}
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Vigor", fontSize = 24.sp) },
+                                    onClick = {skill = SkillType.VIGOR; expandedSkill = false}
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Eloquence", fontSize = 24.sp) },
+                                    onClick = {skill = SkillType.ELOQUENCE; expandedSkill = false}
+                                )
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .padding(16.dp)
+                        ) {
+                            Button(
                                 onClick = {
-                                    toDoList = toDoList + MakeToDoItem(
+                                    toDoList = toDoList + makeToDoItem(
                                         entryState.text.toString(),
                                         descriptionState.text.toString(),
                                         priority,
-                                        difficulty
+                                        difficulty,
+                                        skill!!
                                     )
                                     entryState.clearText()
                                     descriptionState.clearText()
                                     priority = ""
                                     difficulty = ""
+                                    skill = null
                                 },
                                 enabled = canCreateTodo,
                                 modifier = Modifier

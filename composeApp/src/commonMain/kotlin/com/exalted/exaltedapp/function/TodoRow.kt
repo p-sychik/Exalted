@@ -67,8 +67,7 @@ fun TodoRow(
                             Text(text = item.description)
                         }
                         Text(
-                            text = "Priority: ${item.priority} | Difficulty: ${item.difficulty}",
-
+                            text = "Priority: ${item.priority} | Difficulty: ${item.difficulty} | Skill: ${item.skill.displayName}",
                             )
                     }
                     Button(
