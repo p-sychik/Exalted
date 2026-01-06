@@ -36,10 +36,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.exalted.exaltedapp.data.Difficulty
+import com.exalted.exaltedapp.data.Priority
 import com.exalted.exaltedapp.data.ToDoItem
 import com.exalted.exaltedapp.data.progression.SkillType
 import kotlin.collections.plus
-import kotlin.text.ifEmpty
 
 @Composable
 fun TodoList(){
@@ -68,8 +69,8 @@ fun TodoList(){
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                var priority by remember { mutableStateOf("") }
-                var difficulty by remember { mutableStateOf("") }
+                var difficulty by remember { mutableStateOf<Difficulty?>(null) }
+                var priority by remember { mutableStateOf<Priority?>(null) }
                 var skill by remember { mutableStateOf<SkillType?>(null) }
                 var expandedPriority by remember { mutableStateOf(false) }
                 var expandedDifficulty by remember { mutableStateOf(false) }
@@ -78,8 +79,8 @@ fun TodoList(){
                 val canCreateTodo by remember {
                     derivedStateOf {
                         entryState.text.isNotBlank() &&
-                                priority.isNotBlank() &&
-                                difficulty.isNotBlank() &&
+                                priority != null &&
+                                difficulty != null &&
                                 skill != null
                     }
                 }
@@ -121,7 +122,10 @@ fun TodoList(){
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp)
                             ) {
-                                Text(priority.ifEmpty { "Priority" }, fontSize = 24.sp)
+                                Text(
+                                    text = priority?.displayName ?: "Priority",
+                                    fontSize = 24.sp
+                                )
                             }
                             DropdownMenu(
                                 expanded = expandedPriority,
@@ -129,15 +133,15 @@ fun TodoList(){
                             ) {
                                 DropdownMenuItem(
                                     text = { Text("Low", fontSize = 24.sp) },
-                                    onClick = {priority = "Low"; expandedPriority = false}
+                                    onClick = {priority = Priority.LOW; expandedPriority = false}
                                 )
                                 DropdownMenuItem(
                                     text = { Text("Medium", fontSize = 24.sp) },
-                                    onClick = {priority = "Medium"; expandedPriority = false}
+                                    onClick = {priority = Priority.MEDIUM; expandedPriority = false}
                                 )
                                 DropdownMenuItem(
                                     text = { Text("High", fontSize = 24.sp) },
-                                    onClick = {priority = "High"; expandedPriority = false}
+                                    onClick = {priority = Priority.HIGH; expandedPriority = false}
                                 )
                             }
                         }
@@ -151,7 +155,10 @@ fun TodoList(){
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp)
                             ) {
-                                Text(difficulty.ifEmpty { "Difficulty" }, fontSize = 24.sp)
+                                Text(
+                                    text = difficulty?.displayName ?: "Difficulty",
+                                    fontSize = 24.sp
+                                )
                             }
                             DropdownMenu(
                                 expanded = expandedDifficulty,
@@ -159,15 +166,15 @@ fun TodoList(){
                             ) {
                                 DropdownMenuItem(
                                     text = { Text("Easy", fontSize = 24.sp) },
-                                    onClick = {difficulty = "Easy"; expandedDifficulty = false}
+                                    onClick = {difficulty = Difficulty.EASY; expandedDifficulty = false}
                                 )
                                 DropdownMenuItem(
                                     text = { Text("Moderate", fontSize = 24.sp) },
-                                    onClick = {difficulty = "Moderate"; expandedDifficulty = false}
+                                    onClick = {difficulty = Difficulty.MODERATE; expandedDifficulty = false}
                                 )
                                 DropdownMenuItem(
                                     text = { Text("Hard", fontSize = 24.sp) },
-                                    onClick = {difficulty = "Hard"; expandedDifficulty = false}
+                                    onClick = {difficulty = Difficulty.HARD; expandedDifficulty = false}
                                 )
                             }
                         }
@@ -221,14 +228,14 @@ fun TodoList(){
                                     toDoList = toDoList + makeToDoItem(
                                         entryState.text.toString(),
                                         descriptionState.text.toString(),
-                                        priority,
-                                        difficulty,
+                                        priority!!,
+                                        difficulty!!,
                                         skill!!
                                     )
                                     entryState.clearText()
                                     descriptionState.clearText()
-                                    priority = ""
-                                    difficulty = ""
+                                    priority = null
+                                    difficulty = null
                                     skill = null
                                 },
                                 enabled = canCreateTodo,
@@ -262,7 +269,7 @@ fun TodoList(){
                             verticalArrangement = Arrangement.spacedBy(0.dp)
                         ) {
                             items(
-                                items = toDoList.sortedByDescending { priorityWeight(it.priority) },
+                                items = toDoList.sortedByDescending { (it.priority.weight) },
                                 key = { it.id }
                             ) { item ->
                                 TodoRow(

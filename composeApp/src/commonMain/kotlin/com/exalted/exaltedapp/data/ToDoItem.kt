@@ -6,8 +6,8 @@ data class ToDoItem(
     val id: String,
     val entry: String,
     val description: String,
-    val priority: String,
-    val difficulty: String,
+    val priority: Priority,
+    val difficulty: Difficulty,
     val skill: SkillType,
     var completed: Boolean = false
 )
