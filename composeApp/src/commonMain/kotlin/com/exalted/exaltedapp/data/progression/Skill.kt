@@ -6,6 +6,7 @@ enum class SkillType (val displayName: String) {
     SCHOLARSHIP("Scholarship"),
     VIGOR("Vigor"),
     ELOQUENCE("Eloquence"),
+    STEWARDSHIP("Stewardship")
 }
 
 data class Skill(
