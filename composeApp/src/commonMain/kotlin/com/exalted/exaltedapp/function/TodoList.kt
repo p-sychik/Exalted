@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -43,240 +42,236 @@ import com.exalted.exaltedapp.data.progression.SkillType
 import kotlin.collections.plus
 
 @Composable
-fun TodoList(){
-    var showContent by remember { mutableStateOf(false) }
-    var toDoList by remember { mutableStateOf(listOf<ToDoItem>()) }
-    val completedTasks = toDoList.filter { it.completed }
-
+fun TodoList(
+    modifier: Modifier = Modifier,
+    toDoList: List<ToDoItem>,
+    onUpdate: (List<ToDoItem>) -> Unit
+){
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(color = MaterialTheme.colorScheme.background)
-            .safeContentPadding()
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Button(
-            onClick = { showContent = !showContent },
-
-            ) {
-            Text("Tasks", fontSize = 24.sp)
-        }
         val entryState = rememberTextFieldState()
         val descriptionState = rememberTextFieldState()
 
-        AnimatedVisibility(showContent) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            var difficulty by remember { mutableStateOf<Difficulty?>(Difficulty.EASY) }
+            var priority by remember { mutableStateOf<Priority?>(Priority.LOW) }
+            var skill by remember { mutableStateOf<SkillType?>(null) }
+            var expandedPriority by remember { mutableStateOf(false) }
+            var expandedDifficulty by remember { mutableStateOf(false) }
+            var expandedSkill by remember { mutableStateOf(false) }
+
+            val dropdownTextStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 16.sp)
+
+            val canCreateTodo by remember {
+                derivedStateOf {
+                    entryState.text.isNotBlank() &&
+                            priority != null &&
+                            difficulty != null &&
+                            skill != null
+                }
+            }
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
-                var difficulty by remember { mutableStateOf<Difficulty?>(null) }
-                var priority by remember { mutableStateOf<Priority?>(null) }
-                var skill by remember { mutableStateOf<SkillType?>(null) }
-                var expandedPriority by remember { mutableStateOf(false) }
-                var expandedDifficulty by remember { mutableStateOf(false) }
-                var expandedSkill by remember { mutableStateOf(false) }
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    TextField(
+                        state = entryState,
+                        label = { Text("Task") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                    )
+                    TextField(
+                        state = descriptionState,
+                        label = { Text("Description (optional)") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp)
+                    )
 
-                val dropdownTextStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 16.sp)
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Button(
+                            onClick = { expandedPriority = !expandedPriority },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = "Priority: " + priority?.displayName,
+                                fontSize = 24.sp
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = expandedPriority,
+                            onDismissRequest = { expandedPriority = false },
+                        ) {
+                            Priority.entries.forEach { priorityType ->
+                                DropdownMenuItem(
+                                    text = { Text(priorityType.displayName, style = dropdownTextStyle) },
+                                    onClick = {
+                                        priority = priorityType
+                                        expandedPriority = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Button(
+                            onClick = { expandedDifficulty = !expandedDifficulty },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = "Difficulty: " + difficulty?.displayName,
+                                fontSize = 24.sp
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = expandedDifficulty,
+                            onDismissRequest = { expandedDifficulty = false },
+                        ) {
+                            Difficulty.entries.forEach { difficultyType ->
+                                DropdownMenuItem(
+                                    text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
+                                    onClick = {
+                                        difficulty = difficultyType
+                                        expandedDifficulty = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Button(
+                            onClick = { expandedSkill = !expandedSkill },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Text(
+                                text = skill?.displayName ?: "Skill",
+                                fontSize = 24.sp
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = expandedSkill,
+                            onDismissRequest = { expandedSkill = false },
+                        ) {
+                            SkillType.entries.forEach { skillType ->
+                                DropdownMenuItem(
+                                    text = { Text(skillType.displayName, style = dropdownTextStyle) },
+                                    onClick = {
+                                        skill = skillType
+                                        expandedSkill = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                val newItem = makeToDoItem(
+                                    entryState.text.toString(),
+                                    descriptionState.text.toString(),
+                                    priority!!,
+                                    difficulty!!,
+                                    skill!!
+                                )
+                                onUpdate(toDoList + newItem)
 
-                val canCreateTodo by remember {
-                    derivedStateOf {
-                        entryState.text.isNotBlank() &&
-                                priority != null &&
-                                difficulty != null &&
-                                skill != null
+                                entryState.clearText()
+                                descriptionState.clearText()
+                                priority = Priority.LOW
+                                difficulty = Difficulty.EASY
+                                skill = null
+                            },
+                            enabled = canCreateTodo,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text("Inscribe", fontSize = 24.sp)
+                        }
                     }
                 }
+            }
+            val listState = rememberLazyListState()
+            AnimatedVisibility(
+                visible = toDoList.isNotEmpty(),
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        TextField(
-                            state = entryState,
-                            label = { Text("Task") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        )
-                        TextField(
-                            state = descriptionState,
-                            label = { Text("Description (optional)") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        )
 
-                        Box(
-                            modifier = Modifier
-                                .padding(16.dp)
-                        ) {
-                            Button(
-                                onClick = { expandedPriority = !expandedPriority },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = priority?.displayName ?: "Priority",
-                                    fontSize = 24.sp
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = expandedPriority,
-                                onDismissRequest = { expandedPriority = false },
-                            ) {
-                                Priority.entries.forEach { priorityType ->
-                                    DropdownMenuItem(
-                                        text = { Text(priorityType.displayName, style = dropdownTextStyle) },
-                                        onClick = {
-                                            priority = priorityType
-                                            expandedPriority = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .padding(16.dp)
-                        ) {
-                            Button(
-                                onClick = { expandedDifficulty = !expandedDifficulty },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = difficulty?.displayName ?: "Difficulty",
-                                    fontSize = 24.sp
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = expandedDifficulty,
-                                onDismissRequest = { expandedDifficulty = false },
-                            ) {
-                                Difficulty.entries.forEach { difficultyType ->
-                                    DropdownMenuItem(
-                                        text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
-                                        onClick = {
-                                            difficulty = difficultyType
-                                            expandedDifficulty = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .padding(16.dp)
-                        ) {
-                            Button(
-                                onClick = { expandedSkill = !expandedSkill },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = skill?.displayName ?: "Skill",
-                                    fontSize = 24.sp
-                                )
-                            }
-                            DropdownMenu(
-                                expanded = expandedSkill,
-                                onDismissRequest = { expandedSkill = false },
-                            ) {
-                                SkillType.entries.forEach { skillType ->
-                                    DropdownMenuItem(
-                                        text = { Text(skillType.displayName, style = dropdownTextStyle) },
-                                        onClick = {
-                                            skill = skillType
-                                            expandedSkill = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .padding(16.dp)
-                        ) {
-                            Button(
-                                onClick = {
-                                    toDoList = toDoList + makeToDoItem(
-                                        entryState.text.toString(),
-                                        descriptionState.text.toString(),
-                                        priority!!,
-                                        difficulty!!,
-                                        skill!!
-                                    )
-                                    entryState.clearText()
-                                    descriptionState.clearText()
-                                    priority = null
-                                    difficulty = null
-                                    skill = null
-                                },
-                                enabled = canCreateTodo,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp)
-                            ) {
-                                Text("Inscribe", fontSize = 24.sp)
-                            }
-                        }
-                    }
-                }
-                val listState = rememberLazyListState()
-                AnimatedVisibility(
-                    visible = toDoList.isNotEmpty(),
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    Card(
+                    val sortedList = toDoList.sortedByDescending { it.priority.weight }
+
+                    LazyColumn(
+                        state = listState,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-                    ) {
-                        LazyColumn(
-                            state = listState,
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            .fillMaxWidth(),
 
-                            verticalArrangement = Arrangement.spacedBy(0.dp)
-                        ) {
-                            items(
-                                items = toDoList.sortedByDescending { (it.priority.weight) },
-                                key = { it.id }
-                            ) { item ->
-                                TodoRow(
-                                    item = item,
-                                    onToggleCompleted = { toggled ->
-                                        toDoList = toDoList.map {
-                                            if (it.id == toggled.id)
-                                                it.copy(completed = !it.completed)
-                                            else
-                                                it
-                                        }
-                                    },
-                                    onAutoRemove = { removed ->
-                                        toDoList = toDoList.filterNot { it.id == removed.id }
+                        verticalArrangement = Arrangement.spacedBy(0.dp)
+                    ) {
+                        items(
+                            items = sortedList,
+                            key = { it.id }
+                        ) { item ->
+                            TodoRow(
+                                item = item,
+                                onToggleCompleted = { toggled ->
+                                    val newList = toDoList.map {
+                                        if (it.id == toggled.id) it.copy(completed = !it.completed)
+                                        else it
                                     }
-                                )
-                                HorizontalDivider(
-                                    color = Color.Gray.copy(alpha = 0.5f),
-                                    thickness = 2.dp,
-                                    modifier = Modifier.padding(vertical = 4.dp)
-                                )
-                            }
+                                    onUpdate(newList)
+                                },
+                                onAutoRemove = { removed ->
+                                    val newList = toDoList.filterNot { it.id == removed.id }
+                                    onUpdate(newList)
+                                }
+                            )
+                            HorizontalDivider(
+                                color = Color.Gray.copy(alpha = 0.5f),
+                                thickness = 2.dp,
+                                modifier = Modifier.padding(vertical = 4.dp)
+                            )
                         }
                     }
                 }

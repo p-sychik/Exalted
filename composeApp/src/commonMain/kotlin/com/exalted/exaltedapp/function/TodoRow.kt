@@ -4,28 +4,20 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.exalted.exaltedapp.data.ToDoItem
-import kotlinx.coroutines.delay
 
 @Composable
 fun TodoRow(
@@ -33,19 +25,17 @@ fun TodoRow(
     onToggleCompleted: (ToDoItem) -> Unit,
     onAutoRemove: (ToDoItem) -> Unit
 ) {
-    var visible by remember { mutableStateOf(true) }
+    val visible = remember(item.id) { mutableStateOf(true) }
 
     LaunchedEffect(item.completed) {
-        if (item.completed) {
-            delay(2000)
-            visible = false
-            delay(300)
+        if (item.completed && visible.value) {
+            visible.value = false
             onAutoRemove(item)
         }
     }
 
     AnimatedVisibility(
-        visible = visible,
+        visible = visible.value,
         enter = fadeIn(),
         exit = fadeOut()
     ) {
@@ -62,7 +52,10 @@ fun TodoRow(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(text = item.entry, style = MaterialTheme.typography.titleMedium, fontSize = 30.sp)
+                        Text(text = item.entry,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontSize = 30.sp
+                        )
                         if (item.description.isNotEmpty()) {
                             Text(text = item.description)
                         }
