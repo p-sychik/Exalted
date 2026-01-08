@@ -9,5 +9,6 @@ data class ToDoItem(
     val priority: Priority,
     val difficulty: Difficulty,
     val skill: SkillType,
-    val completed: Boolean = false
+    val completed: Boolean = false,
+    val xpOnCompletion: Int
 )
