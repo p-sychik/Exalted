@@ -35,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.exalted.exaltedapp.data.Difficulty
@@ -91,6 +92,11 @@ fun TodoList(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Text(
+                        text = "Create a task...",
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                    )
                     OutlinedTextField(
                         value = task,
                         onValueChange = { task = it },
@@ -107,125 +113,105 @@ fun TodoList(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
                     )
+                    Button(
+                        onClick = { expandedPriority = !expandedPriority },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
+                    ) {
+                        Text(
+                            text = "Priority: " + priority?.displayName,
+                            fontSize = 24.sp
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expandedPriority,
+                        onDismissRequest = { expandedPriority = false },
+                    ) {
+                        Priority.entries.forEach { priorityType ->
+                            DropdownMenuItem(
+                                text = { Text(priorityType.displayName, style = dropdownTextStyle) },
+                                onClick = {
+                                    priority = priorityType
+                                    expandedPriority = false
+                                }
+                            )
+                        }
+                    }
+                    Button(
+                        onClick = { expandedDifficulty = !expandedDifficulty },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
+                    ) {
+                        Text(
+                            text = "Difficulty: " + difficulty?.displayName,
+                            fontSize = 24.sp
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expandedDifficulty,
+                        onDismissRequest = { expandedDifficulty = false },
+                    ) {
+                        Difficulty.entries.forEach { difficultyType ->
+                            DropdownMenuItem(
+                                text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
+                                onClick = {
+                                    difficulty = difficultyType
+                                    expandedDifficulty = false
+                                }
+                            )
+                        }
+                    }
+                    Button(
+                        onClick = { expandedSkill = !expandedSkill },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 16.dp)
+                    ) {
+                        Text(
+                            text = skill?.displayName ?: "Skill",
+                            fontSize = 24.sp
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = expandedSkill,
+                        onDismissRequest = { expandedSkill = false },
+                    ) {
+                        SkillType.entries.forEach { skillType ->
+                            DropdownMenuItem(
+                                text = { Text(skillType.displayName, style = dropdownTextStyle) },
+                                onClick = {
+                                    skill = skillType
+                                    expandedSkill = false
+                                }
+                            )
+                        }
+                    }
 
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        Button(
-                            onClick = { expandedPriority = !expandedPriority },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Text(
-                                text = "Priority: " + priority?.displayName,
-                                fontSize = 24.sp
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expandedPriority,
-                            onDismissRequest = { expandedPriority = false },
-                        ) {
-                            Priority.entries.forEach { priorityType ->
-                                DropdownMenuItem(
-                                    text = { Text(priorityType.displayName, style = dropdownTextStyle) },
-                                    onClick = {
-                                        priority = priorityType
-                                        expandedPriority = false
-                                    }
-                                )
-                            }
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        Button(
-                            onClick = { expandedDifficulty = !expandedDifficulty },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Text(
-                                text = "Difficulty: " + difficulty?.displayName,
-                                fontSize = 24.sp
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expandedDifficulty,
-                            onDismissRequest = { expandedDifficulty = false },
-                        ) {
-                            Difficulty.entries.forEach { difficultyType ->
-                                DropdownMenuItem(
-                                    text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
-                                    onClick = {
-                                        difficulty = difficultyType
-                                        expandedDifficulty = false
-                                    }
-                                )
-                            }
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        Button(
-                            onClick = { expandedSkill = !expandedSkill },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        ) {
-                            Text(
-                                text = skill?.displayName ?: "Skill",
-                                fontSize = 24.sp
-                            )
-                        }
-                        DropdownMenu(
-                            expanded = expandedSkill,
-                            onDismissRequest = { expandedSkill = false },
-                        ) {
-                            SkillType.entries.forEach { skillType ->
-                                DropdownMenuItem(
-                                    text = { Text(skillType.displayName, style = dropdownTextStyle) },
-                                    onClick = {
-                                        skill = skillType
-                                        expandedSkill = false
-                                    }
-                                )
-                            }
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        Button(
-                            onClick = {
-                                val newItem = makeToDoItem(
-                                    task,
-                                    description,
-                                    priority!!,
-                                    difficulty!!,
-                                    skill!!
-                                )
-                                onUpdate(toDoList + newItem)
 
-                                task = ""
-                                description = ""
-                                priority = Priority.LOW
-                                difficulty = Difficulty.EASY
-                                skill = null
-                            },
-                            enabled = canCreateTodo,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp)
-                        ) {
-                            Text("Inscribe", fontSize = 24.sp)
-                        }
+                    Button(
+                        onClick = {
+                            val newItem = makeToDoItem(
+                                task,
+                                description,
+                                priority!!,
+                                difficulty!!,
+                                skill!!
+                            )
+                            onUpdate(toDoList + newItem)
+
+                            task = ""
+                            description = ""
+                            priority = Priority.LOW
+                            difficulty = Difficulty.EASY
+                            skill = null
+                        },
+                        enabled = canCreateTodo,
+                        modifier = Modifier
+                            .padding(vertical = 16.dp)
+                    ) {
+                        Text("Inscribe", fontSize = 24.sp)
                     }
                 }
             }
