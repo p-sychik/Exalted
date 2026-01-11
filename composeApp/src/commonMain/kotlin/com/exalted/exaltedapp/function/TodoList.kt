@@ -1,4 +1,4 @@
-package com.exalted.exaltedapp.function
+ package com.exalted.exaltedapp.function
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -22,6 +22,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,13 +55,12 @@ fun TodoList(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val entryState = rememberTextFieldState()
-        val descriptionState = rememberTextFieldState()
-
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            var task by rememberSaveable { mutableStateOf("") }
+            var description by rememberSaveable { mutableStateOf("") }
             var difficulty by remember { mutableStateOf<Difficulty?>(Difficulty.EASY) }
             var priority by remember { mutableStateOf<Priority?>(Priority.LOW) }
             var skill by remember { mutableStateOf<SkillType?>(null) }
@@ -71,7 +72,7 @@ fun TodoList(
 
             val canCreateTodo by remember {
                 derivedStateOf {
-                    entryState.text.isNotBlank() &&
+                    task.isNotBlank() &&
                             priority != null &&
                             difficulty != null &&
                             skill != null
@@ -90,15 +91,17 @@ fun TodoList(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TextField(
-                        state = entryState,
+                    OutlinedTextField(
+                        value = task,
+                        onValueChange = { task = it },
                         label = { Text("Task") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
                     )
-                    TextField(
-                        state = descriptionState,
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = { description = it },
                         label = { Text("Description (optional)") },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -202,16 +205,16 @@ fun TodoList(
                         Button(
                             onClick = {
                                 val newItem = makeToDoItem(
-                                    entryState.text.toString(),
-                                    descriptionState.text.toString(),
+                                    task,
+                                    description,
                                     priority!!,
                                     difficulty!!,
                                     skill!!
                                 )
                                 onUpdate(toDoList + newItem)
 
-                                entryState.clearText()
-                                descriptionState.clearText()
+                                task = ""
+                                description = ""
                                 priority = Priority.LOW
                                 difficulty = Difficulty.EASY
                                 skill = null

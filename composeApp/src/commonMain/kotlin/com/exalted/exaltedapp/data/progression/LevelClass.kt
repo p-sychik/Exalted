@@ -8,8 +8,4 @@ data class LevelClass (
     fun addXP(amount: Int): LevelClass {
         TODO()
     }
-
-    fun calculateXP(amount: Int): Int {
-        TODO()
-    }
 }
