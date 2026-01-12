@@ -27,4 +27,9 @@ fun calculateXP(priority: Priority, difficulty: Difficulty): Int {
     return xp
 }
 
+suspend fun signUp(username: String, password: String): Boolean {
+    //TODO
+    return true
+}
+
 

@@ -7,6 +7,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -15,6 +17,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 
 @Composable
 fun Login(
@@ -22,6 +25,7 @@ fun Login(
 ) {
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
 
     Card(
         modifier = Modifier
@@ -59,10 +63,17 @@ fun Login(
                 label = { Text("Password") },
                 visualTransformation = PasswordVisualTransformation()
             )
+            val scope = rememberCoroutineScope()
             Button(
                 onClick = {
-                    TODO()
-                    // signUp(username, password)
+                    scope.launch {
+                        try {
+                            val success = signUp(username, password)
+                            message = if (success) {"Signup successful"} else "Signup failed"
+                        } catch (e: Exception) {
+                            message = "Error: ${e.message}"
+                        }
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
