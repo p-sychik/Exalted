@@ -6,10 +6,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.exalted.exaltedapp.data.ToDoItem
+import com.exalted.exaltedapp.data.progression.User
+import com.exalted.exaltedapp.factory.createGuestUser
+import com.exalted.exaltedapp.function.Character
 import com.exalted.exaltedapp.function.Login
 import com.exalted.exaltedapp.function.TodoList
 import com.exalted.exaltedapp.ui.Dock
@@ -25,6 +29,7 @@ fun App() {
         var toDoList by rememberSaveable { mutableStateOf(listOf<ToDoItem>()) }
         val completedTasks = toDoList.filter { it.completed }
         var selectedIndex by rememberSaveable { mutableStateOf(0) }
+        val user by remember { mutableStateOf<User?>(createGuestUser()) }
 
         Scaffold(
             bottomBar = {
@@ -36,7 +41,7 @@ fun App() {
         ) { padding ->
             when (selectedIndex) {
                 0 -> TodoList(modifier = Modifier.padding(padding), toDoList = toDoList, onUpdate = { toDoList = it } )
-                1 -> Login(modifier = Modifier.padding(padding))
+                1 -> if (user != null) { Character(modifier = Modifier.padding(padding), user = user!!) } else Login(modifier = Modifier.padding(padding))
             }
         }
     }

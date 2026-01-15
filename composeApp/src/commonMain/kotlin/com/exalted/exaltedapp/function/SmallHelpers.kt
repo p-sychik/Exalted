@@ -4,6 +4,7 @@ import com.exalted.exaltedapp.data.Difficulty
 import com.exalted.exaltedapp.data.Priority
 import com.exalted.exaltedapp.data.ToDoItem
 import com.exalted.exaltedapp.data.progression.SkillType
+import kotlin.math.ln
 import kotlin.math.round
 import kotlin.math.roundToInt
 import kotlin.uuid.ExperimentalUuidApi
@@ -25,6 +26,10 @@ fun calculateXP(priority: Priority, difficulty: Difficulty): Int {
     val xp : Int = (baseXP * priority.xpModifier * difficulty.xpModifier).roundToInt()
 
     return xp
+}
+
+fun xpToNextLevel(level: Int): Int {
+    return (100 * level * ln(level + 1.5)).toInt()
 }
 
 suspend fun signUp(username: String, password: String): Boolean {
