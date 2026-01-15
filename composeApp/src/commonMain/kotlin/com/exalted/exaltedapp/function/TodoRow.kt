@@ -18,18 +18,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.exalted.exaltedapp.data.ToDoItem
+import com.exalted.exaltedapp.data.progression.User
 
 @Composable
 fun TodoRow(
     item: ToDoItem,
     onToggleCompleted: (ToDoItem) -> Unit,
-    onAutoRemove: (ToDoItem) -> Unit
+    onAutoRemove: (ToDoItem) -> Unit,
+    user: User,
+    onUserUpdate: (User) -> Unit
 ) {
     val visible = remember(item.id) { mutableStateOf(true) }
 
     LaunchedEffect(item.completed) {
         if (item.completed && visible.value) {
             visible.value = false
+
+            onUserUpdate(user.copy(
+                mainLevel = user.mainLevel.addXP(item.xpOnCompletion)
+            ))
+
             onAutoRemove(item)
         }
     }

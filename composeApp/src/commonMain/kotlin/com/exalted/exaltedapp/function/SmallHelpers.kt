@@ -3,6 +3,7 @@ package com.exalted.exaltedapp.function
 import com.exalted.exaltedapp.data.Difficulty
 import com.exalted.exaltedapp.data.Priority
 import com.exalted.exaltedapp.data.ToDoItem
+import com.exalted.exaltedapp.data.progression.LevelClass
 import com.exalted.exaltedapp.data.progression.SkillType
 import kotlin.math.ln
 import kotlin.math.round

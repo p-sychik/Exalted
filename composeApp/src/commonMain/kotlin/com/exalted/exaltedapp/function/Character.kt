@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +33,23 @@ fun Character(modifier: Modifier, user : User) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Main Level: ${user.mainLevel}",
+                text = "Main Level: ${user.mainLevel.level}",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
+            )
+            Text(
+                text = "XP: ${user.mainLevel.xp}",
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = "XP To Next Level: ${user.mainLevel.xpToNext}",
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+            )
+            LinearProgressIndicator(
+                progress = { user.mainLevel.xp.toFloat() / user.mainLevel.xpToNext.toFloat() },
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }

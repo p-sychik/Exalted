@@ -29,7 +29,7 @@ fun App() {
         var toDoList by rememberSaveable { mutableStateOf(listOf<ToDoItem>()) }
         val completedTasks = toDoList.filter { it.completed }
         var selectedIndex by rememberSaveable { mutableStateOf(0) }
-        val user by remember { mutableStateOf<User?>(createGuestUser()) }
+        var user by remember { mutableStateOf(createGuestUser()) }
 
         Scaffold(
             bottomBar = {
@@ -40,8 +40,19 @@ fun App() {
             }
         ) { padding ->
             when (selectedIndex) {
-                0 -> TodoList(modifier = Modifier.padding(padding), toDoList = toDoList, onUpdate = { toDoList = it } )
-                1 -> if (user != null) { Character(modifier = Modifier.padding(padding), user = user!!) } else Login(modifier = Modifier.padding(padding))
+                0 -> TodoList(
+                    modifier = Modifier.padding(padding),
+                    toDoList = toDoList,
+                    onUpdate = { toDoList = it },
+                    user = user,
+                    onUserUpdate = { user = it } )
+
+                1 -> if (user != null) {
+                    Character(
+                        modifier = Modifier.padding(padding),
+                        user = user) }
+                else
+                    Login(modifier = Modifier.padding(padding))
             }
         }
     }
