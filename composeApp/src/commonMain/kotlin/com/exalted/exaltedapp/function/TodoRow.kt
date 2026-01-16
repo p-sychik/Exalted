@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.exalted.exaltedapp.data.ToDoItem
+import com.exalted.exaltedapp.data.progression.SkillType
 import com.exalted.exaltedapp.data.progression.User
 
 @Composable
@@ -34,8 +35,19 @@ fun TodoRow(
         if (item.completed && visible.value) {
             visible.value = false
 
+            val updatedLevel = user.mainLevel.addXP(item.xpOnCompletion)
+
+            val updatedSkills = user.skills.toMutableMap().apply {
+                this[item.skill]?.let { currentSkill ->
+                    this[item.skill] = currentSkill.copy(
+                        level = currentSkill.level.addXP(item.xpOnCompletion)
+                    )
+                }
+            }
+
             onUserUpdate(user.copy(
-                mainLevel = user.mainLevel.addXP(item.xpOnCompletion)
+                mainLevel = updatedLevel,
+                skills = updatedSkills
             ))
 
             onAutoRemove(item)
