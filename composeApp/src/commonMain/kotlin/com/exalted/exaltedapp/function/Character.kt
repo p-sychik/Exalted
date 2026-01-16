@@ -1,56 +1,60 @@
 package com.exalted.exaltedapp.function
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.exalted.exaltedapp.data.progression.User
+import com.exalted.exaltedapp.ui.StyledCard
+import exaltedapp.composeapp.generated.resources.Res
+import exaltedapp.composeapp.generated.resources.character
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun Character(modifier: Modifier, user : User) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-    ) {
-
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+    StyledCard {
+        Row(
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = "Main Level: ${user.mainLevel.level}",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-            )
-            Text(
-                text = "XP: ${user.mainLevel.xp}",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-            )
-            Text(
-                text = "XP To Next Level: ${user.mainLevel.xpToNext}",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-            )
-            LinearProgressIndicator(
-                progress = { user.mainLevel.xp.toFloat() / user.mainLevel.xpToNext.toFloat() },
-                modifier = Modifier.fillMaxWidth()
-            )
+            Box(
+                modifier = Modifier.padding(30.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(Res.drawable.character),
+                    contentDescription = null,
+                    alignment = Alignment.Center,
+                )
+            }
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(all = 20.dp),
+                horizontalAlignment = Alignment.End,
+
+                ) {
+                Text(
+                    text = user.username,
+                    fontSize = 50.sp,
+                    fontFamily = MaterialTheme.typography.titleLarge.fontFamily,
+                )
+                Text(
+                    text = "Main Level: ${user.mainLevel.level}",
+                    fontSize = 20.sp,
+                )
+                Text(
+                    text = "XP Remaining: ${(user.mainLevel.xpToNext - user.mainLevel.xp)}",
+                    fontSize = 20.sp,
+                )
+                LinearProgressIndicator(
+                    progress = { user.mainLevel.xp.toFloat() / user.mainLevel.xpToNext.toFloat() },
+                    modifier = Modifier.width(350.dp).height(20.dp).padding(vertical = 5.dp)
+                )
+            }
         }
     }
 }
