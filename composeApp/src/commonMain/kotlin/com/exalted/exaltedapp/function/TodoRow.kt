@@ -3,6 +3,7 @@ package com.exalted.exaltedapp.function
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -15,11 +16,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
+import com.exalted.exaltedapp.data.Priority
 import com.exalted.exaltedapp.data.ToDoItem
 import com.exalted.exaltedapp.data.progression.SkillType
 import com.exalted.exaltedapp.data.progression.User
+import exaltedapp.composeapp.generated.resources.Res
+import exaltedapp.composeapp.generated.resources.banner
+import exaltedapp.composeapp.generated.resources.character
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun TodoRow(
@@ -65,22 +75,51 @@ fun TodoRow(
                 .background(if (item.completed) Color(0xFFD6FFD6) else MaterialTheme.colorScheme.surface)
                 .padding(12.dp)
         ) {
+            if (item.priority == Priority.HIGH) {
+                Image(
+                    painter = painterResource(Res.drawable.banner),
+                    contentDescription = null,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .width(60.dp)
+                        .align(Alignment.TopStart)
+                        .offset(x = (-40).dp, y = (-22).dp)
+                        .zIndex(1f)
+                        .layout { measurable, constraints ->
+                            val placeable = measurable.measure(constraints)
+                            layout(0, 0) {
+                                placeable.place(0, 0)
+                            }
+                        }
+                )
+            }
             Column {
+                val bannerOffset = if (item.priority == Priority.HIGH) 50.dp else 0.dp
+
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(text = item.entry,
+                        Text(
+                            text = item.entry,
                             style = MaterialTheme.typography.titleMedium,
-                            fontSize = 30.sp
+                            fontSize = 30.sp,
+                            modifier = Modifier.padding(start = bannerOffset),
+                            overflow = TextOverflow.Ellipsis
                         )
                         if (item.description.isNotEmpty()) {
-                            Text(text = item.description)
+                            Text(
+                                text = item.description,
+                                maxLines = 1,
+                                modifier = Modifier.padding(start = bannerOffset),
+                                overflow = TextOverflow.Ellipsis
+                            )
                         }
                         Text(
                             text = "Priority: ${item.priority.displayName} | Difficulty: ${item.difficulty.displayName} | Skill: ${item.skill.displayName} | XP: ${item.xpOnCompletion}",
+                            modifier = Modifier.padding(start = bannerOffset)
                             )
                     }
                     Button(

@@ -6,9 +6,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -113,79 +115,79 @@ fun TodoList(
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
                     )
-                    Button(
-                        onClick = { expandedPriority = !expandedPriority },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp)
-                    ) {
-                        Text(
-                            text = "Priority: " + priority?.displayName,
-                            fontSize = 24.sp
-                        )
-                        DropdownMenu(
-                            expanded = expandedPriority,
-                            onDismissRequest = { expandedPriority = false },
-                        ) {
-                            Priority.entries.forEach { priorityType ->
-                                DropdownMenuItem(
-                                    text = { Text(priorityType.displayName, style = dropdownTextStyle) },
-                                    onClick = {
-                                        priority = priorityType
-                                        expandedPriority = false
-                                    }
-                                )
-                            }
-                        }
-                    }
 
-                    Button(
-                        onClick = { expandedDifficulty = !expandedDifficulty },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                     ) {
-                        Text(
-                            text = "Difficulty: " + difficulty?.displayName,
-                            fontSize = 24.sp
-                        )
-                        DropdownMenu(
-                            expanded = expandedDifficulty,
-                            onDismissRequest = { expandedDifficulty = false },
+                        Button(
+                            onClick = { expandedPriority = !expandedPriority },
+                            modifier = Modifier.width(200.dp)
                         ) {
-                            Difficulty.entries.forEach { difficultyType ->
-                                DropdownMenuItem(
-                                    text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
-                                    onClick = {
-                                        difficulty = difficultyType
-                                        expandedDifficulty = false
-                                    }
-                                )
+                            Text(
+                                text = "Priority: " + priority?.displayName,
+                                fontSize = 24.sp
+                            )
+                            DropdownMenu(
+                                expanded = expandedPriority,
+                                onDismissRequest = { expandedPriority = false },
+                            ) {
+                                Priority.entries.forEach { priorityType ->
+                                    DropdownMenuItem(
+                                        text = { Text(priorityType.displayName, style = dropdownTextStyle) },
+                                        onClick = {
+                                            priority = priorityType
+                                            expandedPriority = false
+                                        }
+                                    )
+                                }
                             }
                         }
-                    }
-                    Button(
-                        onClick = { expandedSkill = !expandedSkill },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 16.dp)
-                    ) {
-                        Text(
-                            text = skill?.displayName ?: "Skill",
-                            fontSize = 24.sp
-                        )
-                        DropdownMenu(
-                            expanded = expandedSkill,
-                            onDismissRequest = { expandedSkill = false },
+
+                        Button(
+                            onClick = { expandedDifficulty = !expandedDifficulty },
+                            modifier = Modifier.width(200.dp)
                         ) {
-                            SkillType.entries.forEach { skillType ->
-                                DropdownMenuItem(
-                                    text = { Text(skillType.displayName, style = dropdownTextStyle) },
-                                    onClick = {
-                                        skill = skillType
-                                        expandedSkill = false
-                                    }
-                                )
+                            Text(
+                                text = "Difficulty: " + difficulty?.displayName,
+                                fontSize = 24.sp
+                            )
+                            DropdownMenu(
+                                expanded = expandedDifficulty,
+                                onDismissRequest = { expandedDifficulty = false },
+                            ) {
+                                Difficulty.entries.forEach { difficultyType ->
+                                    DropdownMenuItem(
+                                        text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
+                                        onClick = {
+                                            difficulty = difficultyType
+                                            expandedDifficulty = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                        Button(
+                            onClick = { expandedSkill = !expandedSkill },
+                            modifier = Modifier.width(200.dp)
+                        ) {
+                            Text(
+                                text = skill?.displayName ?: "Skill",
+                                fontSize = 24.sp
+                            )
+                            DropdownMenu(
+                                expanded = expandedSkill,
+                                onDismissRequest = { expandedSkill = false },
+                            ) {
+                                SkillType.entries.forEach { skillType ->
+                                    DropdownMenuItem(
+                                        text = { Text(skillType.displayName, style = dropdownTextStyle) },
+                                        onClick = {
+                                            skill = skillType
+                                            expandedSkill = false
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
@@ -259,9 +261,8 @@ fun TodoList(
                                 onUserUpdate = onUserUpdate
                             )
                             HorizontalDivider(
-                                color = Color.Gray.copy(alpha = 0.5f),
-                                thickness = 2.dp,
-                                modifier = Modifier.padding(vertical = 4.dp)
+                                color = Color.Black.copy(alpha = 0.5f),
+                                thickness = 2.dp
                             )
                         }
                     }

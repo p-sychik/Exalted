@@ -23,7 +23,7 @@ fun makeToDoItem(entry: String, description: String, priority: Priority, difficu
 
 // Had an idea for skill points, one could be increasing your luck of doubling XP on task completion?
 fun calculateXP(priority: Priority, difficulty: Difficulty): Int {
-    val baseXP = (105..128).random()
+    val baseXP = (128..151).random()
     val xp : Int = (baseXP * priority.xpModifier * difficulty.xpModifier).roundToInt()
 
     return xp
