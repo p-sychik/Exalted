@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.exalted.exaltedapp.data.progression.User
@@ -20,39 +21,41 @@ import org.jetbrains.compose.resources.painterResource
 fun Character(modifier: Modifier, user : User) {
     StyledCard {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
         ) {
             Box(
-                modifier = Modifier.padding(30.dp),
-                contentAlignment = Alignment.Center
+                modifier = Modifier.padding(20.dp).size(200.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Image(
                     painter = painterResource(Res.drawable.character),
+                    contentScale = ContentScale.FillBounds,
                     contentDescription = null,
                     alignment = Alignment.Center,
                 )
             }
             Column(
                 modifier = Modifier.fillMaxWidth().padding(all = 20.dp),
-                horizontalAlignment = Alignment.End,
-
+                horizontalAlignment = Alignment.Start,
                 ) {
                 Text(
                     text = user.username,
-                    fontSize = 50.sp,
+                    fontSize = 80.sp,
                     fontFamily = MaterialTheme.typography.titleLarge.fontFamily,
                 )
                 Text(
-                    text = "Main Level: ${user.mainLevel.level}",
-                    fontSize = 20.sp,
+                    text = "Character Level: ${user.mainLevel.level}",
+                    fontSize = 30.sp,
                 )
                 Text(
                     text = "XP Remaining: ${(user.mainLevel.xpToNext - user.mainLevel.xp)}",
-                    fontSize = 20.sp,
+                    fontSize = 30.sp,
                 )
                 LinearProgressIndicator(
                     progress = { user.mainLevel.xp.toFloat() / user.mainLevel.xpToNext.toFloat() },
-                    modifier = Modifier.width(350.dp).height(20.dp).padding(vertical = 5.dp)
+                    modifier = Modifier.fillMaxWidth().height(20.dp).padding(vertical = 5.dp)
                 )
             }
         }
