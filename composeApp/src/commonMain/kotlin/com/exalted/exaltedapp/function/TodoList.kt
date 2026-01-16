@@ -98,15 +98,16 @@ fun TodoList(
                     )
                     OutlinedTextField(
                         value = task,
-                        onValueChange = { task = it },
+                        onValueChange = { if (it.length <= 80) task = it },
                         label = { Text("Task") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp)
+                            .padding(vertical = 4.dp),
+
                     )
                     OutlinedTextField(
                         value = description,
-                        onValueChange = { description = it },
+                        onValueChange = { if (it.length <= 1000) description = it },
                         label = { Text("Description (optional)") },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -122,21 +123,22 @@ fun TodoList(
                             text = "Priority: " + priority?.displayName,
                             fontSize = 24.sp
                         )
-                    }
-                    DropdownMenu(
-                        expanded = expandedPriority,
-                        onDismissRequest = { expandedPriority = false },
-                    ) {
-                        Priority.entries.forEach { priorityType ->
-                            DropdownMenuItem(
-                                text = { Text(priorityType.displayName, style = dropdownTextStyle) },
-                                onClick = {
-                                    priority = priorityType
-                                    expandedPriority = false
-                                }
-                            )
+                        DropdownMenu(
+                            expanded = expandedPriority,
+                            onDismissRequest = { expandedPriority = false },
+                        ) {
+                            Priority.entries.forEach { priorityType ->
+                                DropdownMenuItem(
+                                    text = { Text(priorityType.displayName, style = dropdownTextStyle) },
+                                    onClick = {
+                                        priority = priorityType
+                                        expandedPriority = false
+                                    }
+                                )
+                            }
                         }
                     }
+
                     Button(
                         onClick = { expandedDifficulty = !expandedDifficulty },
                         modifier = Modifier
@@ -147,19 +149,19 @@ fun TodoList(
                             text = "Difficulty: " + difficulty?.displayName,
                             fontSize = 24.sp
                         )
-                    }
-                    DropdownMenu(
-                        expanded = expandedDifficulty,
-                        onDismissRequest = { expandedDifficulty = false },
-                    ) {
-                        Difficulty.entries.forEach { difficultyType ->
-                            DropdownMenuItem(
-                                text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
-                                onClick = {
-                                    difficulty = difficultyType
-                                    expandedDifficulty = false
-                                }
-                            )
+                        DropdownMenu(
+                            expanded = expandedDifficulty,
+                            onDismissRequest = { expandedDifficulty = false },
+                        ) {
+                            Difficulty.entries.forEach { difficultyType ->
+                                DropdownMenuItem(
+                                    text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
+                                    onClick = {
+                                        difficulty = difficultyType
+                                        expandedDifficulty = false
+                                    }
+                                )
+                            }
                         }
                     }
                     Button(
@@ -172,22 +174,21 @@ fun TodoList(
                             text = skill?.displayName ?: "Skill",
                             fontSize = 24.sp
                         )
-                    }
-                    DropdownMenu(
-                        expanded = expandedSkill,
-                        onDismissRequest = { expandedSkill = false },
-                    ) {
-                        SkillType.entries.forEach { skillType ->
-                            DropdownMenuItem(
-                                text = { Text(skillType.displayName, style = dropdownTextStyle) },
-                                onClick = {
-                                    skill = skillType
-                                    expandedSkill = false
-                                }
-                            )
+                        DropdownMenu(
+                            expanded = expandedSkill,
+                            onDismissRequest = { expandedSkill = false },
+                        ) {
+                            SkillType.entries.forEach { skillType ->
+                                DropdownMenuItem(
+                                    text = { Text(skillType.displayName, style = dropdownTextStyle) },
+                                    onClick = {
+                                        skill = skillType
+                                        expandedSkill = false
+                                    }
+                                )
+                            }
                         }
                     }
-
 
                     Button(
                         onClick = {
