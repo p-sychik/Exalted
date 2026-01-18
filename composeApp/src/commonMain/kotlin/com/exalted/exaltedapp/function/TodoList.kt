@@ -41,6 +41,7 @@ import com.exalted.exaltedapp.data.Priority
 import com.exalted.exaltedapp.data.ToDoItem
 import com.exalted.exaltedapp.data.progression.SkillType
 import com.exalted.exaltedapp.data.progression.User
+import com.exalted.exaltedapp.ui.StyledCard
 import kotlin.collections.plus
 
 @Composable
@@ -80,15 +81,7 @@ fun TodoList(
                             skill != null
                 }
             }
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
+            StyledCard {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -223,13 +216,7 @@ fun TodoList(
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-                ) {
+                StyledCard {
 
                     val sortedList = toDoList.sortedByDescending { it.priority.weight }
 

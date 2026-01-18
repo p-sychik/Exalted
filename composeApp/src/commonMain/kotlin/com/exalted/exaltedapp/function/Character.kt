@@ -72,11 +72,9 @@ fun Character(modifier: Modifier, user : User) {
                 }
             }
         }
-        val listState = rememberLazyListState()
 
-        val skillList = remember(user.skills) {
-            user.skills.entries.toList()
-        }
+        val listState = rememberLazyListState()
+        val skillList = remember(user.skills) { user.skills.entries.toList() }
 
         StyledCard(
             modifier = Modifier
