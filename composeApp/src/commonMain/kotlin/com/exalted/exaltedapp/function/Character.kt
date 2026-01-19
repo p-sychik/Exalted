@@ -79,7 +79,7 @@ fun Character(modifier: Modifier, user : User) {
         StyledCard(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 8.dp)
+                .padding(vertical = 8.dp)
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),

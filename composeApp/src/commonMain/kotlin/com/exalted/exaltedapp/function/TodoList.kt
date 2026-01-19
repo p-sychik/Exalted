@@ -58,200 +58,195 @@ fun TodoList(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            var task by rememberSaveable { mutableStateOf("") }
-            var description by rememberSaveable { mutableStateOf("") }
-            var difficulty by remember { mutableStateOf<Difficulty?>(Difficulty.EASY) }
-            var priority by remember { mutableStateOf<Priority?>(Priority.LOW) }
-            var skill by remember { mutableStateOf<SkillType?>(null) }
-            var expandedPriority by remember { mutableStateOf(false) }
-            var expandedDifficulty by remember { mutableStateOf(false) }
-            var expandedSkill by remember { mutableStateOf(false) }
+        var task by rememberSaveable { mutableStateOf("") }
+        var description by rememberSaveable { mutableStateOf("") }
+        var difficulty by remember { mutableStateOf<Difficulty?>(Difficulty.EASY) }
+        var priority by remember { mutableStateOf<Priority?>(Priority.LOW) }
+        var skill by remember { mutableStateOf<SkillType?>(null) }
+        var expandedPriority by remember { mutableStateOf(false) }
+        var expandedDifficulty by remember { mutableStateOf(false) }
+        var expandedSkill by remember { mutableStateOf(false) }
 
-            val dropdownTextStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 16.sp)
+        val dropdownTextStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 16.sp)
 
-            val canCreateTodo by remember {
-                derivedStateOf {
-                    task.isNotBlank() &&
-                            priority != null &&
-                            difficulty != null &&
-                            skill != null
-                }
+        val canCreateTodo by remember {
+            derivedStateOf {
+                task.isNotBlank() &&
+                        priority != null &&
+                        difficulty != null &&
+                        skill != null
             }
-            StyledCard {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+        }
+        StyledCard {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Create a task...",
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                )
+                OutlinedTextField(
+                    value = task,
+                    onValueChange = { if (it.length <= 80) task = it },
+                    label = { Text("Task") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+
+                    )
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { if (it.length <= 1000) description = it },
+                    label = { Text("Description (optional)") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                 ) {
-                    Text(
-                        text = "Create a task...",
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center,
-                    )
-                    OutlinedTextField(
-                        value = task,
-                        onValueChange = { if (it.length <= 80) task = it },
-                        label = { Text("Task") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-
-                    )
-                    OutlinedTextField(
-                        value = description,
-                        onValueChange = { if (it.length <= 1000) description = it },
-                        label = { Text("Description (optional)") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                    Button(
+                        onClick = { expandedPriority = !expandedPriority },
+                        modifier = Modifier.width(200.dp)
                     ) {
-                        Button(
-                            onClick = { expandedPriority = !expandedPriority },
-                            modifier = Modifier.width(200.dp)
+                        Text(
+                            text = "Priority: " + priority?.displayName,
+                            fontSize = 24.sp
+                        )
+                        DropdownMenu(
+                            expanded = expandedPriority,
+                            onDismissRequest = { expandedPriority = false },
                         ) {
-                            Text(
-                                text = "Priority: " + priority?.displayName,
-                                fontSize = 24.sp
-                            )
-                            DropdownMenu(
-                                expanded = expandedPriority,
-                                onDismissRequest = { expandedPriority = false },
-                            ) {
-                                Priority.entries.forEach { priorityType ->
-                                    DropdownMenuItem(
-                                        text = { Text(priorityType.displayName, style = dropdownTextStyle) },
-                                        onClick = {
-                                            priority = priorityType
-                                            expandedPriority = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
-
-                        Button(
-                            onClick = { expandedDifficulty = !expandedDifficulty },
-                            modifier = Modifier.width(200.dp)
-                        ) {
-                            Text(
-                                text = "Difficulty: " + difficulty?.displayName,
-                                fontSize = 24.sp
-                            )
-                            DropdownMenu(
-                                expanded = expandedDifficulty,
-                                onDismissRequest = { expandedDifficulty = false },
-                            ) {
-                                Difficulty.entries.forEach { difficultyType ->
-                                    DropdownMenuItem(
-                                        text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
-                                        onClick = {
-                                            difficulty = difficultyType
-                                            expandedDifficulty = false
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        Button(
-                            onClick = { expandedSkill = !expandedSkill },
-                            modifier = Modifier.width(200.dp)
-                        ) {
-                            Text(
-                                text = skill?.displayName ?: "Skill",
-                                fontSize = 24.sp
-                            )
-                            DropdownMenu(
-                                expanded = expandedSkill,
-                                onDismissRequest = { expandedSkill = false },
-                            ) {
-                                SkillType.entries.forEach { skillType ->
-                                    DropdownMenuItem(
-                                        text = { Text(skillType.displayName, style = dropdownTextStyle) },
-                                        onClick = {
-                                            skill = skillType
-                                            expandedSkill = false
-                                        }
-                                    )
-                                }
+                            Priority.entries.forEach { priorityType ->
+                                DropdownMenuItem(
+                                    text = { Text(priorityType.displayName, style = dropdownTextStyle) },
+                                    onClick = {
+                                        priority = priorityType
+                                        expandedPriority = false
+                                    }
+                                )
                             }
                         }
                     }
 
                     Button(
-                        onClick = {
-                            val newItem = makeToDoItem(
-                                task,
-                                description,
-                                priority!!,
-                                difficulty!!,
-                                skill!!
-                            )
-                            onUpdate(toDoList + newItem)
-
-                            task = ""
-                            description = ""
-                            priority = Priority.LOW
-                            difficulty = Difficulty.EASY
-                            skill = null
-                        },
-                        enabled = canCreateTodo,
-                        modifier = Modifier
-                            .padding(vertical = 16.dp)
+                        onClick = { expandedDifficulty = !expandedDifficulty },
+                        modifier = Modifier.width(200.dp)
                     ) {
-                        Text("Inscribe", fontSize = 24.sp)
+                        Text(
+                            text = "Difficulty: " + difficulty?.displayName,
+                            fontSize = 24.sp
+                        )
+                        DropdownMenu(
+                            expanded = expandedDifficulty,
+                            onDismissRequest = { expandedDifficulty = false },
+                        ) {
+                            Difficulty.entries.forEach { difficultyType ->
+                                DropdownMenuItem(
+                                    text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
+                                    onClick = {
+                                        difficulty = difficultyType
+                                        expandedDifficulty = false
+                                    }
+                                )
+                            }
+                        }
+                    }
+                    Button(
+                        onClick = { expandedSkill = !expandedSkill },
+                        modifier = Modifier.width(200.dp)
+                    ) {
+                        Text(
+                            text = skill?.displayName ?: "Skill",
+                            fontSize = 24.sp
+                        )
+                        DropdownMenu(
+                            expanded = expandedSkill,
+                            onDismissRequest = { expandedSkill = false },
+                        ) {
+                            SkillType.entries.forEach { skillType ->
+                                DropdownMenuItem(
+                                    text = { Text(skillType.displayName, style = dropdownTextStyle) },
+                                    onClick = {
+                                        skill = skillType
+                                        expandedSkill = false
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
+
+                Button(
+                    onClick = {
+                        val newItem = makeToDoItem(
+                            task,
+                            description,
+                            priority!!,
+                            difficulty!!,
+                            skill!!
+                        )
+                        onUpdate(toDoList + newItem)
+
+                        task = ""
+                        description = ""
+                        priority = Priority.LOW
+                        difficulty = Difficulty.EASY
+                        skill = null
+                    },
+                    enabled = canCreateTodo,
+                    modifier = Modifier
+                        .padding(vertical = 16.dp)
+                ) {
+                    Text("Inscribe", fontSize = 24.sp)
+                }
             }
-            val listState = rememberLazyListState()
-            AnimatedVisibility(
-                visible = toDoList.isNotEmpty(),
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                StyledCard {
+        }
+        val listState = rememberLazyListState()
+        AnimatedVisibility(
+            visible = toDoList.isNotEmpty(),
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            StyledCard {
 
-                    val sortedList = toDoList.sortedByDescending { it.priority.weight }
+                val sortedList = toDoList.sortedByDescending { it.priority.weight }
 
-                    LazyColumn(
-                        state = listState,
-                        modifier = Modifier
-                            .fillMaxWidth(),
-
-                        verticalArrangement = Arrangement.spacedBy(0.dp)
-                    ) {
-                        items(
-                            items = sortedList,
-                            key = { it.id }
-                        ) { item ->
-                            TodoRow(
-                                item = item,
-                                onToggleCompleted = { toggled ->
-                                    val newList = toDoList.map {
-                                        if (it.id == toggled.id) it.copy(completed = !it.completed)
-                                        else it
-                                    }
-                                    onUpdate(newList)
-                                },
-                                onAutoRemove = { removed ->
-                                    val newList = toDoList.filterNot { it.id == removed.id }
-                                    onUpdate(newList)
-                                },
-                                user = user,
-                                onUserUpdate = onUserUpdate
-                            )
-                            HorizontalDivider(
-                                color = Color.Black.copy(alpha = 0.5f),
-                                thickness = 2.dp
-                            )
-                        }
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                ) {
+                    items(
+                        items = sortedList,
+                        key = { it.id }
+                    ) { item ->
+                        TodoRow(
+                            item = item,
+                            onToggleCompleted = { toggled ->
+                                val newList = toDoList.map {
+                                    if (it.id == toggled.id)
+                                        it.copy(completed = !it.completed)
+                                    else
+                                        it
+                                }
+                                onUpdate(newList)
+                            },
+                            onAutoRemove = { removed ->
+                                val newList = toDoList.filterNot { it.id == removed.id }
+                                onUpdate(newList)
+                            },
+                            user = user,
+                            onUserUpdate = onUserUpdate
+                        )
+                        HorizontalDivider(
+                            color = Color.Black.copy(alpha = 0.5f),
+                            thickness = 2.dp
+                        )
                     }
                 }
             }
