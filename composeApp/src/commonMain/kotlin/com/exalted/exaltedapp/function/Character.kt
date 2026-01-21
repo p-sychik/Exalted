@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -19,13 +17,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.exalted.exaltedapp.data.progression.SkillType
 import com.exalted.exaltedapp.data.progression.User
 import com.exalted.exaltedapp.ui.StyledCard
 import exaltedapp.composeapp.generated.resources.Res
 import exaltedapp.composeapp.generated.resources.character
 import org.jetbrains.compose.resources.painterResource
-import kotlin.enums.enumEntries
 
 @Composable
 fun Character(modifier: Modifier, user : User) {

@@ -18,11 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.clipRect
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layout
@@ -33,14 +29,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.exalted.exaltedapp.data.Priority
 import com.exalted.exaltedapp.data.ToDoItem
-import com.exalted.exaltedapp.data.progression.SkillType
 import com.exalted.exaltedapp.data.progression.User
 import exaltedapp.composeapp.generated.resources.Res
 import exaltedapp.composeapp.generated.resources.banner
 import exaltedapp.composeapp.generated.resources.strikethrough
 import org.jetbrains.compose.resources.imageResource
 import org.jetbrains.compose.resources.painterResource
-import kotlin.collections.set
 
 @Composable
 fun TodoRow(
