@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.exalted.exaltedapp.data.Difficulty
+import com.exalted.exaltedapp.data.Dropdown
 import com.exalted.exaltedapp.data.Priority
 import com.exalted.exaltedapp.data.ToDoItem
 import com.exalted.exaltedapp.data.progression.SkillType
@@ -43,9 +44,7 @@ fun TodoList(
         var difficulty by rememberSaveable { mutableStateOf<Difficulty?>(Difficulty.EASY) }
         var priority by rememberSaveable { mutableStateOf<Priority?>(Priority.LOW) }
         var skill by rememberSaveable { mutableStateOf<SkillType?>(null) }
-        var expandedPriority by remember { mutableStateOf(false) }
-        var expandedDifficulty by remember { mutableStateOf(false) }
-        var expandedSkill by remember { mutableStateOf(false) }
+        var openDropdown by remember { mutableStateOf(Dropdown.NONE) }
         val dropdownTextStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 16.sp)
 
         val canCreateTodo by remember {
@@ -89,7 +88,7 @@ fun TodoList(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                 ) {
                     Button(
-                        onClick = { expandedPriority = !expandedPriority },
+                        onClick = { openDropdown = Dropdown.PRIORITY },
                         modifier = Modifier.width(200.dp)
                     ) {
                         Text(
@@ -97,15 +96,15 @@ fun TodoList(
                             fontSize = 24.sp
                         )
                         DropdownMenu(
-                            expanded = expandedPriority,
-                            onDismissRequest = { expandedPriority = false },
+                            expanded = openDropdown == Dropdown.PRIORITY,
+                            onDismissRequest = { openDropdown == Dropdown.NONE },
                         ) {
                             Priority.entries.forEach { priorityType ->
                                 DropdownMenuItem(
                                     text = { Text(priorityType.displayName, style = dropdownTextStyle) },
                                     onClick = {
                                         priority = priorityType
-                                        expandedPriority = false
+                                        openDropdown = Dropdown.NONE
                                     }
                                 )
                             }
@@ -113,7 +112,7 @@ fun TodoList(
                     }
 
                     Button(
-                        onClick = { expandedDifficulty = !expandedDifficulty },
+                        onClick = { openDropdown = Dropdown.DIFFICULTY },
                         modifier = Modifier.width(200.dp)
                     ) {
                         Text(
@@ -121,22 +120,22 @@ fun TodoList(
                             fontSize = 24.sp
                         )
                         DropdownMenu(
-                            expanded = expandedDifficulty,
-                            onDismissRequest = { expandedDifficulty = false },
+                            expanded = openDropdown == Dropdown.DIFFICULTY,
+                            onDismissRequest = { openDropdown = Dropdown.NONE },
                         ) {
                             Difficulty.entries.forEach { difficultyType ->
                                 DropdownMenuItem(
                                     text = { Text(difficultyType.displayName, style = dropdownTextStyle) },
                                     onClick = {
                                         difficulty = difficultyType
-                                        expandedDifficulty = false
+                                        openDropdown = Dropdown.NONE
                                     }
                                 )
                             }
                         }
                     }
                     Button(
-                        onClick = { expandedSkill = !expandedSkill },
+                        onClick = { openDropdown = Dropdown.SKILL },
                         modifier = Modifier.width(200.dp)
                     ) {
                         Text(
@@ -144,15 +143,15 @@ fun TodoList(
                             fontSize = 24.sp
                         )
                         DropdownMenu(
-                            expanded = expandedSkill,
-                            onDismissRequest = { expandedSkill = false },
+                            expanded = openDropdown == Dropdown.SKILL,
+                            onDismissRequest = { openDropdown = Dropdown.NONE },
                         ) {
                             SkillType.entries.forEach { skillType ->
                                 DropdownMenuItem(
                                     text = { Text(skillType.displayName, style = dropdownTextStyle) },
                                     onClick = {
                                         skill = skillType
-                                        expandedSkill = false
+                                        openDropdown = Dropdown.NONE
                                     }
                                 )
                             }
@@ -222,7 +221,5 @@ fun TodoList(
         }
     }
 }
-
-
 
 
