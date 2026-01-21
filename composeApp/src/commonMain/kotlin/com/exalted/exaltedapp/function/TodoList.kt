@@ -60,13 +60,12 @@ fun TodoList(
     ) {
         var task by rememberSaveable { mutableStateOf("") }
         var description by rememberSaveable { mutableStateOf("") }
-        var difficulty by remember { mutableStateOf<Difficulty?>(Difficulty.EASY) }
-        var priority by remember { mutableStateOf<Priority?>(Priority.LOW) }
-        var skill by remember { mutableStateOf<SkillType?>(null) }
+        var difficulty by rememberSaveable { mutableStateOf<Difficulty?>(Difficulty.EASY) }
+        var priority by rememberSaveable { mutableStateOf<Priority?>(Priority.LOW) }
+        var skill by rememberSaveable { mutableStateOf<SkillType?>(null) }
         var expandedPriority by remember { mutableStateOf(false) }
         var expandedDifficulty by remember { mutableStateOf(false) }
         var expandedSkill by remember { mutableStateOf(false) }
-
         val dropdownTextStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 16.sp)
 
         val canCreateTodo by remember {
@@ -227,18 +226,8 @@ fun TodoList(
                     ) { item ->
                         TodoRow(
                             item = item,
-                            onToggleCompleted = { toggled ->
-                                val newList = toDoList.map {
-                                    if (it.id == toggled.id)
-                                        it.copy(completed = !it.completed)
-                                    else
-                                        it
-                                }
-                                onUpdate(newList)
-                            },
-                            onAutoRemove = { removed ->
-                                val newList = toDoList.filterNot { it.id == removed.id }
-                                onUpdate(newList)
+                            onCompleted = { completedItem ->
+                                onUpdate(toDoList.filterNot { it.id == completedItem.id })
                             },
                             user = user,
                             onUserUpdate = onUserUpdate
@@ -253,4 +242,7 @@ fun TodoList(
         }
     }
 }
+
+
+
 
