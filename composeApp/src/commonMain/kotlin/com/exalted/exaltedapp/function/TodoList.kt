@@ -97,7 +97,7 @@ fun TodoList(
                         )
                         DropdownMenu(
                             expanded = openDropdown == Dropdown.PRIORITY,
-                            onDismissRequest = { openDropdown == Dropdown.NONE },
+                            onDismissRequest = { openDropdown = Dropdown.NONE },
                         ) {
                             Priority.entries.forEach { priorityType ->
                                 DropdownMenuItem(

@@ -88,8 +88,8 @@ fun TodoRow(
 
             val strikeBitmap = imageResource(Res.drawable.strikethrough)
 
-            Box(modifier = Modifier.fillMaxWidth().zIndex(1f)) {
-                Canvas(modifier = Modifier.matchParentSize()) {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Canvas(modifier = Modifier.matchParentSize().zIndex(1f)) {
                     val left = strike.value?.x ?: startX.value
                     val right = strike.value?.y ?: currentX.value
 
